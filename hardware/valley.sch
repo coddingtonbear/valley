@@ -886,11 +886,11 @@ Wire Wire Line
 	4200 5100 4050 5100
 Wire Wire Line
 	4050 5200 4200 5200
-Text GLabel 4200 6000 2    60   Output ~ 0
+Text GLabel 4200 5800 2    60   Output ~ 0
 LED_RED
 Text GLabel 4200 5900 2    60   Output ~ 0
 LED_GREEN
-Text GLabel 4200 5800 2    60   Output ~ 0
+Text GLabel 4200 6000 2    60   Output ~ 0
 LED_BLUE
 Text GLabel 5950 6100 0    60   Input ~ 0
 LED_RED
