@@ -573,28 +573,6 @@ $EndComp
 Text GLabel 8300 5450 0    60   Input ~ 0
 A0
 $Comp
-L R_Small R6
-U 1 1 58EB2116
-P 9950 6150
-F 0 "R6" H 10009 6196 50  0000 L CNN
-F 1 "10k" H 10009 6105 50  0000 L CNN
-F 2 "Resistors_SMD:R_0805_HandSoldering" H 9950 6150 50  0001 C CNN
-F 3 "" H 9950 6150 50  0000 C CNN
-	1    9950 6150
-	-1   0    0    1   
-$EndComp
-$Comp
-L +3.3V #PWR023
-U 1 1 58EB2251
-P 9950 6400
-F 0 "#PWR023" H 9950 6250 50  0001 C CNN
-F 1 "+3.3V" H 9965 6573 50  0000 C CNN
-F 2 "" H 9950 6400 50  0000 C CNN
-F 3 "" H 9950 6400 50  0000 C CNN
-	1    9950 6400
-	0    1    1    0   
-$EndComp
-$Comp
 L +3.3V #PWR024
 U 1 1 58EB28CE
 P 9550 5650
@@ -650,28 +628,6 @@ F 2 "Resistors_SMD:R_0805_HandSoldering" H 6200 6100 50  0001 C CNN
 F 3 "" H 6200 6100 50  0000 C CNN
 	1    6200 6100
 	0    1    1    0   
-$EndComp
-$Comp
-L GND #PWR026
-U 1 1 58EB4388
-P 9300 4300
-F 0 "#PWR026" H 9300 4050 50  0001 C CNN
-F 1 "GND" V 9305 4172 50  0000 R CNN
-F 2 "" H 9300 4300 50  0000 C CNN
-F 3 "" H 9300 4300 50  0000 C CNN
-	1    9300 4300
-	0    1    1    0   
-$EndComp
-$Comp
-L R_Small R5
-U 1 1 58EB43FB
-P 9400 4400
-F 0 "R5" H 9459 4446 50  0000 L CNN
-F 1 "10k" H 9459 4355 50  0000 L CNN
-F 2 "Resistors_SMD:R_0805_HandSoldering" H 9400 4400 50  0001 C CNN
-F 3 "" H 9400 4400 50  0000 C CNN
-	1    9400 4400
-	1    0    0    -1  
 $EndComp
 Text GLabel 9000 4500 0    60   Input ~ 0
 ENABLE_LC
@@ -877,9 +833,6 @@ Wire Wire Line
 Wire Wire Line
 	9000 4500 9550 4500
 Wire Wire Line
-	9300 4300 9400 4300
-Connection ~ 9400 4500
-Wire Wire Line
 	4050 4100 4200 4100
 Wire Wire Line
 	4200 4200 4050 4200
@@ -922,8 +875,6 @@ Wire Wire Line
 Wire Wire Line
 	8300 5350 8400 5350
 Wire Wire Line
-	8300 5750 8400 5750
-Wire Wire Line
 	9550 4950 10500 4950
 Wire Wire Line
 	10500 4850 10100 4850
@@ -937,13 +888,6 @@ Wire Wire Line
 	10100 4250 10100 4400
 Wire Wire Line
 	10400 4750 10500 4750
-Wire Wire Line
-	9550 5750 10500 5750
-Wire Wire Line
-	9950 6050 9950 5750
-Connection ~ 9950 5750
-Wire Wire Line
-	9950 6250 9950 6400
 Wire Wire Line
 	9550 5350 10500 5350
 Wire Wire Line
@@ -986,4 +930,8 @@ Wire Wire Line
 	10450 6150 10500 6150
 Wire Wire Line
 	10450 6250 10500 6250
+Wire Wire Line
+	9550 5750 10500 5750
+Wire Wire Line
+	8400 5750 8300 5750
 $EndSCHEMATC
