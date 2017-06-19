@@ -320,7 +320,7 @@ void Adafruit_ST7735::commonInit(const uint8_t *cmdList) {
   if(hwSPI) { // Using hardware SPI
 #if defined (SPI_HAS_TRANSACTION)
     SPI.begin();
-    mySPISettings = SPISettings(1000000, MSBFIRST, SPI_MODE0);
+    mySPISettings = SPISettings(12000000, MSBFIRST, SPI_MODE0);
 #elif defined (__AVR__)
     SPCRbackup = SPCR;
     SPI.begin();
@@ -347,15 +347,13 @@ void Adafruit_ST7735::commonInit(const uint8_t *cmdList) {
 
   // toggle RST low to reset; CS low so it'll listen to us
   *csport &= ~cspinmask;
-  if (_rst) {
-    pinMode(_rst, OUTPUT);
-    digitalWrite(_rst, HIGH);
-    delay(500);
-    digitalWrite(_rst, LOW);
-    delay(500);
-    digitalWrite(_rst, HIGH);
-    delay(500);
-  }
+  pinMode(_rst, OUTPUT);
+  digitalWrite(_rst, HIGH);
+  delay(500);
+  digitalWrite(_rst, LOW);
+  delay(500);
+  digitalWrite(_rst, HIGH);
+  delay(500);
 
   if(cmdList) commandList(cmdList);
 }
