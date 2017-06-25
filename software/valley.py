@@ -194,12 +194,7 @@ def main(port, baud):
         baudrate=baud,
     )
     loop.run_until_complete(coro)
-    try:
-        loop.run_forever()
-    except KeyboardInterrupt:
-        raise
-    except Exception as e:
-        logger.exception(e)
+    loop.run_forever()
 
 
 if __name__ == '__main__':
@@ -219,5 +214,6 @@ if __name__ == '__main__':
                 break
         except KeyboardInterrupt:
             break
-        except Exception:
+        except Exception as e:
+            logger.exception(e)
             time.sleep(1)

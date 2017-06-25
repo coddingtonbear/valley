@@ -7,7 +7,7 @@
 
 #define MAX_REGISTERED_CALLBACKS 5
 #define HEARTBEAT_INTERVAL 2500
-#define HEARTBEAT_TIMEOUT 5000
+#define HEARTBEAT_TIMEOUT 10000
 
 struct callback {
     unsigned long messageId;

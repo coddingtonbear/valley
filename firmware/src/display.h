@@ -2,8 +2,8 @@
 
 #include <Arduino.h>
 #include <Adafruit_ST7735.h>
-#include <Fonts/FreeSans12pt7b.h>
-#include <Fonts/FreeSansBold24pt7b.h>
+#include <Fonts/helvetica12.h>
+#include <Fonts/helvetica48.h>
 
 struct colorContainer {
     uint8_t r;

@@ -123,9 +123,7 @@ void loop()
                     displayColor.g,
                     displayColor.b
                 );
-                display.setBigText(
-                    String((int)displayedProductivity) + " %"
-                );
+                display.setBigText(String(displayedProductivity));
                 display.setBacklight(true);
             }
         );

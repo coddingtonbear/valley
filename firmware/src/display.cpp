@@ -40,14 +40,14 @@ void Display::setup()
 }
 
 void Display::setText(String value) {
-    lcd->setFont(&FreeSans12pt7b);
+    lcd->setFont(&Helvetica_Regular12pt7b);
     lcd->setCursor(10, 30);
     lcd->println(value);
 }
 
 void Display::setBigText(String value) {
-    lcd->setFont(&FreeSansBold24pt7b);
-    lcd->setCursor(10, 50);
+    lcd->setFont(&Helvetica_Regular48pt7b);
+    lcd->setCursor(25, 95);
     lcd->println(value);
 }
 
