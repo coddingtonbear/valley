@@ -1,6 +1,15 @@
-#include <Adafruit_ST7735.h>
-#include <Fonts/FreeSans24pt7b.h>
+#pragma once
 
+#include <Arduino.h>
+#include <Adafruit_ST7735.h>
+#include <Fonts/FreeSans12pt7b.h>
+#include <Fonts/FreeSansBold24pt7b.h>
+
+struct colorContainer {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+};
 
 class Display
 {
@@ -12,6 +21,19 @@ class Display
         );
         void setup();
         void loop();
+
+        void setLedColor(uint8_t, uint8_t, uint8_t);
+        void fillScreen(uint8_t, uint8_t, uint8_t);
+        void setTextColor(uint8_t, uint8_t, uint8_t);
+        colorContainer calculateIntermediate(
+            int, int, int,
+            int, int, int,
+            float
+        );
+        void setText(String);
+        void setBigText(String);
+
+        void setBacklight(bool enabled=true);
     private:
         Adafruit_ST7735* lcd;
 
