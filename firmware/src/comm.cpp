@@ -57,8 +57,8 @@ void Comm::loop()
 
     if (port->available()) {
         String output = port->readStringUntil('\n');
-        DynamicJsonBuffer jsonIncoming;
-        JsonObject& root = jsonBuffer.parse(output);
+        DynamicJsonBuffer jsonIncoming(1024);
+        JsonObject& root = jsonIncoming.parse(output);
 
         if(root.success()) {
             //debugMessage("Got result for message: " + root["msg_id"].as<String>());
@@ -85,11 +85,12 @@ void Comm::loop()
                 }
             }
         } else {
-            /*debugMessage(
+            debugMessage(
                 "Unable to decode output; received " +
                 String(output.length()) +
-                " bytes"
-            );*/
+                " bytes:"
+            );
+            debugMessage(output);
         }
     }
     for(uint8_t i = 0; i < MAX_REGISTERED_CALLBACKS; i++) {

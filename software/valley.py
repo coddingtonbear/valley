@@ -197,11 +197,9 @@ def main(port, baud):
     try:
         loop.run_forever()
     except KeyboardInterrupt:
-        pass
+        raise
     except Exception as e:
-        print(e)
-    finally:
-        loop.close()
+        logger.exception(e)
 
 
 if __name__ == '__main__':
@@ -209,18 +207,17 @@ if __name__ == '__main__':
     parser.add_argument('port')
     parser.add_argument('baud')
     parser.add_argument('--loglevel', default='INFO')
-    parser.add_argument('--forever', default=False)
+    parser.add_argument('--forever', action='store_true', default=False)
     args = parser.parse_args()
 
     coloredlogs.install(level=args.loglevel)
+    logger.info('Starting...')
     while True:
         try:
-            logger.info('Starting...')
             main(args.port, args.baud)
-
             if not args.forever:
                 break
         except KeyboardInterrupt:
             break
         except Exception:
-            pass
+            time.sleep(1)

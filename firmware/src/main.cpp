@@ -38,8 +38,10 @@ void setup()
 
 void onConnected(int eventCode, String* eventData) {
     display.setLedColor(0, 255, 0);
-    display.setBacklight(false);
+    display.setBacklight(true);
     connected = true;
+
+    //delete eventData;
 }
 
 
@@ -48,7 +50,7 @@ void onHeartbeatTimeout(int eventCode, String* eventData) {
     display.setBacklight(false);
     display.setLedColor(100, 50, 0);
 
-    delete eventData;
+    //delete eventData;
 }
 
 
@@ -78,30 +80,43 @@ void loop()
             "&restrict_kind=efficiency"
             "&interval=hour"
         );
-        root["path"] = "$.rows[*][4]";
+        root["path"] = "$.rows[*]";
 
         //comm.debugMessage("Fetching data from rescuetime...");
         comm.sendMessageWithCallback(
             "get_json",
             root,
             [&display,&lastUpdateReceived](JsonObject& result) {
-                //comm.debugMessage("Data received.");
-                int lastProductivity = (int)(
-                    result["matches"][result["matches"].size() - 1]
+                comm.debugMessage("Data received.");
+                uint8_t rowCount = result["matches"].size();
+                float productivityValue = (
+                    result["matches"][rowCount - 1][4].as<float>() *
+                    result["matches"][rowCount - 1][1].as<int>()
                 );
-                //comm.debugMessage(
-                //    "Found productivity numbers: " + String(lastProductivity)
-                //);
+                int totalSeconds = (
+                    result["matches"][rowCount - 1][1].as<int>()
+                );
+                if(rowCount > 1) {
+                    int transferrableSeconds = max(
+                        3600 - result["matches"][rowCount - 1][1].as<int>(),
+                        result["matches"][rowCount -2][1].as<int>()
+                    );
+                    productivityValue += (
+                        result["matches"][rowCount - 2][4].as<float>() *
+                        transferrableSeconds
+                    );
+                    totalSeconds += transferrableSeconds;
+                };
+                int displayedProductivity = (int)(
+                    productivityValue / totalSeconds
+                );
                 lastUpdateReceived = millis();
 
                 colorContainer displayColor = display.calculateIntermediate(
                     255, 0, 0,
                     0, 255, 0,
-                    (float)(lastProductivity - 50) / 50
+                    (float)(displayedProductivity - 50) / 50
                 );
-                //Serial.println("R: " + String(displayColor.r));
-                //Serial.println("G: " + String(displayColor.g));
-                //Serial.println("B: " + String(displayColor.b));
 
                 display.fillScreen(
                     displayColor.r,
@@ -109,7 +124,7 @@ void loop()
                     displayColor.b
                 );
                 display.setBigText(
-                    String((int)lastProductivity) + " %"
+                    String((int)displayedProductivity) + " %"
                 );
                 display.setBacklight(true);
             }
