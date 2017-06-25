@@ -86,11 +86,11 @@ void Display::setBacklight(bool enabled)
 
 void Display::fillScreen(uint8_t r, uint8_t g, uint8_t b)
 {
-    lcd->fillScreen(lcd->Color565(r, g, b));
+    lcd->fillScreen(lcd->Color565(b, g, r));
 }
 
 void Display::setTextColor(uint8_t r, uint8_t g, uint8_t b) {
-    lcd->setTextColor(lcd->Color565(r, g, b));
+    lcd->setTextColor(lcd->Color565(b, g, r));
 }
 
 void Display::loop()
