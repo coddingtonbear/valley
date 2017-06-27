@@ -23,7 +23,8 @@
 #define SD_CS 11
 
 //#define REFRESH_INTERVAL 30000
-#define REFRESH_INTERVAL 300000
+#define REFRESH_INTERVAL 200000
+#define LOOKBACK_SECONDS 3600
 
 void setup();
 void loop();

@@ -88,42 +88,50 @@ void loop()
             root,
             [&display,&lastUpdateReceived](JsonObject& result) {
                 comm.debugMessage("Data received.");
-                uint8_t rowCount = result["matches"].size();
-                float productivityValue = (
-                    result["matches"][rowCount - 1][4].as<float>() *
-                    result["matches"][rowCount - 1][1].as<int>()
-                );
-                int totalSeconds = (
-                    result["matches"][rowCount - 1][1].as<int>()
-                );
-                if(rowCount > 1) {
-                    int transferrableSeconds = max(
-                        3600 - result["matches"][rowCount - 1][1].as<int>(),
-                        result["matches"][rowCount -2][1].as<int>()
+                int rowCount = result["matches"].size();
+                float productivityValue = 0;
+                int totalSeconds = 0;
+                for(int i = rowCount - 1; i >= 0; i--) {
+                    int transferrableSeconds = min(
+                        LOOKBACK_SECONDS - totalSeconds,
+                        result["matches"][i][1].as<int>()
                     );
                     productivityValue += (
-                        result["matches"][rowCount - 2][4].as<float>() *
+                        result["matches"][i][4].as<float>() *
                         transferrableSeconds
                     );
                     totalSeconds += transferrableSeconds;
-                };
+                    //comm.debugMessage(
+                    //    "Adding " + String(transferrableSeconds) + " at " +
+                    //    String(result["matches"][i][4].as<float>()) + "%"
+                    //);
+                }
                 int displayedProductivity = (int)(
                     productivityValue / totalSeconds
                 );
                 lastUpdateReceived = millis();
 
                 colorContainer displayColor = display.calculateIntermediate(
-                    255, 0, 0,
-                    0, 255, 0,
-                    (float)(displayedProductivity - 50) / 50
+                    200, 0, 0,
+                    0, 200, 0,
+                    (float)(max(displayedProductivity - 50, 0)) / 50
                 );
-
+                comm.debugMessage(
+                    "Setting screen to "
+                    "R: " + String(displayColor.r)
+                    + " G: " + String(displayColor.g)
+                    + " B: " + String(displayColor.b)
+                );
                 display.fillScreen(
                     displayColor.r,
                     displayColor.g,
                     displayColor.b
                 );
-                display.setBigText(String(displayedProductivity));
+                if(displayedProductivity < 100) {
+                    display.setBigText(String(displayedProductivity));
+                } else {
+                    display.setBigText("OK");
+                }
                 display.setBacklight(true);
             }
         );
