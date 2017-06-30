@@ -22,7 +22,7 @@ void setup()
 
     display.setup();
 
-    Serial.setTimeout(250);
+    Serial.setTimeout(50);
     Serial.begin(115200);
 
     events.addListener(
@@ -122,6 +122,7 @@ void loop()
                     + " G: " + String(displayColor.g)
                     + " B: " + String(displayColor.b)
                 );
+                display.setTextColor(0, 0, 0);
                 display.fillScreen(
                     displayColor.r,
                     displayColor.g,
