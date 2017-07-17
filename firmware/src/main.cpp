@@ -111,22 +111,50 @@ void loop()
                 );
                 lastUpdateReceived = millis();
 
-                colorContainer displayColor = display.calculateIntermediate(
-                    200, 0, 0,
-                    0, 200, 0,
-                    (float)(max(displayedProductivity - 50, 0)) / 50
-                );
+                colorContainer displayColor;
+                colorContainer textColor;
+                if (displayedProductivity >= 50) {
+                    displayColor = display.calculateIntermediate(
+                        200, 0, 0,
+                        0, 200, 0,
+                        (float)(max(displayedProductivity - 50, 0)) / 50
+                    );
+                    textColor.r = 0;
+                    textColor.g = 0;
+                    textColor.b = 0;
+                } else {
+                    displayColor = display.calculateIntermediate(
+                        0, 0, 0,
+                        200, 0, 0,
+                        (float)displayedProductivity / 50
+                    );
+                    textColor = display.calculateIntermediate(
+                        200, 0, 0,
+                        0, 0, 0,
+                        (float)(max(displayedProductivity - 25, 0)) / 25
+                    );
+                }
                 comm.debugMessage(
-                    "Setting screen to "
+                    "Setting background to "
                     "R: " + String(displayColor.r)
                     + " G: " + String(displayColor.g)
                     + " B: " + String(displayColor.b)
                 );
-                display.setTextColor(0, 0, 0);
                 display.fillScreen(
                     displayColor.r,
                     displayColor.g,
                     displayColor.b
+                );
+                comm.debugMessage(
+                    "Setting foreground to "
+                    "R: " + String(textColor.r)
+                    + " G: " + String(textColor.g)
+                    + " B: " + String(textColor.b)
+                );
+                display.setTextColor(
+                    textColor.r,
+                    textColor.g,
+                    textColor.b
                 );
                 if(displayedProductivity < 100) {
                     display.setBigText(String(displayedProductivity));

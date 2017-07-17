@@ -1,6 +1,6 @@
 {
   "build": {
-    "core": "MightyCore", 
+    "core": "arduino", 
     "extra_flags": "-DARDUINO_ARCH_AVR -DARDUINO_AVR_ATmega1284", 
     "f_cpu": "12000000L", 
     "mcu": "atmega1284p", 

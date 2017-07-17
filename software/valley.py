@@ -216,4 +216,4 @@ if __name__ == '__main__':
             break
         except Exception as e:
             logger.exception(e)
-            time.sleep(1)
+            time.sleep(5)
