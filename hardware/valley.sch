@@ -1,4 +1,5 @@
-EESchema Schematic File Version 2
+EESchema Schematic File Version 3
+LIBS:valley-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -205,7 +206,7 @@ RXD
 Text GLabel 5950 2950 0    60   Input ~ 0
 CLKO
 $Comp
-L USB_OTG P2
+L USB_OTG-RESCUE-valley P2
 U 1 1 58EAD0A2
 P 5050 2650
 F 0 "P2" V 5173 2838 50  0000 L CNN
@@ -534,7 +535,7 @@ F 3 "" H 9000 5350 60  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L BSS138 Q2
+L BSS138-RESCUE-valley Q2
 U 1 1 58EB0E1D
 P 10000 4600
 F 0 "Q2" H 10191 4646 50  0000 L CNN
