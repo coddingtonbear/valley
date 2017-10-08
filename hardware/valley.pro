@@ -1,4 +1,4 @@
-update=Saturday, October 07, 2017 'PMt' 02:45:25 PM
+update=Saturday, October 07, 2017 'PMt' 07:09:23 PM
 version=1
 last_client=kicad
 [pcbnew]
@@ -71,3 +71,7 @@ LibName29=contrib
 LibName30=valves
 LibName31=ch340g
 LibName32=txs0108
+LibName33=/Users/adam.coddington/Documents/Projects/kicad_footprints/coddingtonbear/coddingtonbear
+LibName34=/Users/adam.coddington/Documents/Projects/kicad-ESP8266/ESP8266
+LibName35=i2c_95xx
+LibName36=ti-ic
