@@ -1,4 +1,4 @@
-update=Saturday, October 07, 2017 'PMt' 07:09:23 PM
+update=Thursday, October 26, 2017 'PMt' 06:36:13 PM
 version=1
 last_client=kicad
 [pcbnew]
@@ -75,3 +75,5 @@ LibName33=/Users/adam.coddington/Documents/Projects/kicad_footprints/coddingtonb
 LibName34=/Users/adam.coddington/Documents/Projects/kicad-ESP8266/ESP8266
 LibName35=i2c_95xx
 LibName36=ti-ic
+LibName37=/Users/adam.coddington/Documents/Projects/kicad_footprints/ESP32-kiCAD-Footprints/ESP32-Footprints/ESP32-footprints-Shem-Lib
+LibName38=/Users/adam.coddington/Documents/Projects/kicad_footprints/ESP32-kiCAD-Footprints/ESP32-Footprints/espressif-xess
