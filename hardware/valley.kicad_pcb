@@ -1,4 +1,4 @@
-(kicad_pcb (version 20170920) (host pcbnew "(2017-09-25 revision 6e440ff)-master")
+(kicad_pcb (version 20170123) (host pcbnew no-vcs-found-e2505cb~60~ubuntu16.04.1)
 
   (general
     (thickness 1.6)
@@ -34,7 +34,7 @@
   )
 
   (setup
-    (last_trace_width 0.45)
+    (last_trace_width 0.25)
     (user_trace_width 0.35)
     (trace_clearance 0.19)
     (zone_clearance 0.45)
@@ -59,7 +59,7 @@
     (pad_size 1.524 1.524)
     (pad_drill 0.762)
     (pad_to_mask_clearance 0.2)
-    (aux_axis_origin 0 0)
+    (aux_axis_origin 119.38 80.645)
     (visible_elements FFFFFF7F)
     (pcbplotparams
       (layerselection 0x00030_ffffffff)
@@ -85,7 +85,7 @@
       (subtractmaskfromsilk false)
       (outputformat 1)
       (mirror false)
-      (drillshape 1)
+      (drillshape 0)
       (scaleselection 1)
       (outputdirectory ""))
   )
@@ -158,7 +158,7 @@
 
   (net_class Default "This is the default net class."
     (clearance 0.19)
-    (trace_width 0.45)
+    (trace_width 0.25)
     (via_dia 2)
     (via_drill 0.4)
     (uvia_dia 0.3)
