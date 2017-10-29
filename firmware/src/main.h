@@ -2,32 +2,33 @@
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include <EventManager.h>
 #include <SPI.h>
-#include "comm.h"
+#include <WiFi.h>
+#include <Esp.h>
+
+#include "rescuetime.h"
 #include "configuration.h"
 #include "display.h"
+#include "rescuetime.h"
 
-#define LED_R 12
-#define LED_G 13
-#define LED_B 14
+#define LED_R 5
+#define LED_G 18
+#define LED_B 19
 
-#define LCD_CS 3
-#define LCD_RST 0
-#define LCD_DC 2
+#define LCD_CS 33
+#define LCD_RST 25
+#define LCD_DC 26
 
-#define BACKLIGHT 10
+#define SD_CS 4
 
-#define LC_ENABLE 4
+#define NOT_USB_ENUMERATED 21
 
-#define SD_CS 11
+#define SAMPLE_INTERVAL 60000
 
-//#define REFRESH_INTERVAL 30000
-#define REFRESH_INTERVAL 200000
-#define LOOKBACK_SECONDS 3600
+#define WIFI_FAILURE_RESTART 30000
 
 void setup();
 void loop();
 
-void onConnected(int eventCode, String* eventData);
-void onHeartbeatTimeout(int eventCode, String* eventData);
+colorContainer getTextColorForProductivityScore(int);
+colorContainer getBackgroundColorForProductivityScore(int);

@@ -17,4 +17,4 @@ update:
 	    platformio -f -c vim update
 
 monitor:
-	    platformio device monitor --baud=9600 --raw
+	    platformio device monitor --baud=115200 --rts=0 --dtr=0

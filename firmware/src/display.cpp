@@ -1,12 +1,21 @@
 #include "display.h"
 
+#define LEDC_TIMER_BIT 13
+#define LEDC_BASE_FREQ 5001
+
+#define LEDC_R 0
+#define LEDC_G 1
+#define LEDC_B 2
+
 Display::Display(
+    SPIClass* spi_bus,
     uint8_t _lcd_cs, uint8_t _lcd_dc, uint8_t _lcd_rst,
-    uint8_t _led_r, uint8_t _led_g, uint8_t _led_b,
-    uint8_t _backlight
+    uint8_t _led_r, uint8_t _led_g, uint8_t _led_b
 ) {
     led_pulse_position = 0;
     led_pulse_enabled = false;
+
+    spi = spi_bus;
 
     lcd_cs = _lcd_cs;
     lcd_dc = _lcd_dc;
@@ -14,37 +23,44 @@ Display::Display(
     led_r = _led_r;
     led_g = _led_g;
     led_b = _led_b;
-    backlight = _backlight;
 
     pinMode(led_r, OUTPUT);
     pinMode(led_g, OUTPUT);
     pinMode(led_b, OUTPUT);
 
+    // Configure pins for PWM mode
+    ledcSetup(LEDC_R, LEDC_BASE_FREQ, LEDC_TIMER_BIT);
+    ledcAttachPin(led_r, LEDC_R);
+    ledcSetup(LEDC_G, LEDC_BASE_FREQ, LEDC_TIMER_BIT);
+    ledcAttachPin(led_g, LEDC_G);
+    ledcSetup(LEDC_B, LEDC_BASE_FREQ, LEDC_TIMER_BIT);
+    ledcAttachPin(led_b, LEDC_B);
+
     pinMode(lcd_cs, OUTPUT);
     pinMode(lcd_rst, OUTPUT);
     pinMode(lcd_dc, OUTPUT);
-    pinMode(backlight, OUTPUT);
 }
+
+Display::Display() {};
 
 void Display::setup()
 {
-    digitalWrite(backlight, LOW);
     setLedColor(100, 0, 0);
 
-    lcd = new Adafruit_ST7735(lcd_cs, lcd_dc, lcd_rst);
+    lcd = new Adafruit_ST7735(spi, lcd_cs, lcd_dc, lcd_rst);
 
     lcd->initR(INITR_18BLACKTAB);
     lcd->setRotation(1);
     lcd->setTextWrap(true);
 
     setTextColor(255, 255, 255);
-    setLedColor(100, 100, 100);
+    setLedColor(255, 255, 255);
     fillScreen(0, 0, 0);
 }
 
 void Display::setText(String value) {
-    lcd->setFont(&Michroma12pt7b);
-    lcd->setCursor(10, 30);
+    lcd->setFont(&Michroma6pt7b);
+    lcd->setCursor(0, 10);
     lcd->println(value);
 }
 
@@ -71,9 +87,9 @@ void Display::setLedColor(uint8_t r, uint8_t g, uint8_t b, bool pulse)
 
 void Display::_setLedColor(uint8_t r, uint8_t g, uint8_t b)
 {
-    analogWrite(led_r, (int)r * (float)LED_VALUE_MAX / (float)255);
-    analogWrite(led_g, (int)g * (float)LED_VALUE_MAX / (float)255);
-    analogWrite(led_b, (int)b * (float)LED_VALUE_MAX / (float)255);
+    ledcWrite(LEDC_R, r ? (8191 / r) : 0 * 255);
+    ledcWrite(LEDC_G, g ? (8191 / g) : 0 * 255);
+    ledcWrite(LEDC_B, b ? (8191 / b) : 0 * 255);
 }
 
 void Display::_ledPulse() {
@@ -134,11 +150,6 @@ colorContainer Display::calculateIntermediate(
     result.b = (uint8_t)((db * value) + ab);
 
     return result;
-}
-
-void Display::setBacklight(bool enabled)
-{
-    digitalWrite(backlight, enabled ? HIGH : LOW);
 }
 
 void Display::fillScreen(uint8_t r, uint8_t g, uint8_t b)

@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 #include <Adafruit_ST7735.h>
-#include <Fonts/Michroma12pt7b.h>
+#include <Fonts/Michroma6pt7b.h>
 #include <Fonts/Michroma36pt7b.h>
 
 
@@ -19,10 +19,11 @@ class Display
 {
     public:
         Display(
+            SPIClass*,
             uint8_t, uint8_t, uint8_t,
-            uint8_t, uint8_t, uint8_t,
-            uint8_t
+            uint8_t, uint8_t, uint8_t
         );
+        Display();
         void setup();
         void loop();
 
@@ -37,7 +38,6 @@ class Display
         void setText(String);
         void setBigText(String);
 
-        void setBacklight(bool enabled=true);
     private:
         Adafruit_ST7735* lcd;
 
@@ -58,5 +58,6 @@ class Display
         uint8_t led_r;
         uint8_t led_g;
         uint8_t led_b;
-        uint8_t backlight;
+
+        SPIClass* spi;
 };

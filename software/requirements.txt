@@ -1,5 +1,0 @@
-pyserial==3.3
-pyserial-asyncio==0.4
-requests==2.18.1
-coloredlogs==7.0
-jsonpath-ng==1.4.2
