@@ -114,12 +114,12 @@ void loop()
 
         if(lastProductivityScoreDisplayed >= 0) {
             if(lastProductivityScoreDisplayed > productivityScoreDisplayed) {
-                display.setLedColor(10, 20, 0, EFFECT_BREATHE);
+                display.setLedColor(5, 10, 0, EFFECT_BREATHE);
             } else {
-                display.setLedColor(0, 20, 10, EFFECT_BREATHE);
+                display.setLedColor(0, 10, 5, EFFECT_BREATHE);
             }
         } else {
-            display.setLedColor(10, 10, 10, EFFECT_BREATHE);
+            display.setLedColor(5, 5, 5, EFFECT_BREATHE);
         }
 
     }
