@@ -12,7 +12,7 @@ class RescueTime
 public:
     RescueTime(String);
 
-    int getProductivityScore();
+    float getProductivityScore();
 
 private:
     String api_key;

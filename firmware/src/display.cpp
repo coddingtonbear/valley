@@ -1,20 +1,22 @@
 #include "display.h"
 
-#define LEDC_TIMER_BIT 13
-#define LEDC_BASE_FREQ 5001
 
-#define LEDC_R 0
-#define LEDC_G 1
-#define LEDC_B 2
+uint8_t current_r = 0;
+uint8_t current_g = 0;
+uint8_t current_b = 0;
+uint8_t current_effect = -1;
+
+
+void setTimerBrightness(uint8_t timer_id, int brightness) {
+    ledcWrite(timer_id, _min(brightness, pow(2, 13) - 1));
+}
+
 
 Display::Display(
     SPIClass* spi_bus,
     uint8_t _lcd_cs, uint8_t _lcd_dc, uint8_t _lcd_rst,
     uint8_t _led_r, uint8_t _led_g, uint8_t _led_b
 ) {
-    led_pulse_position = 0;
-    led_pulse_enabled = false;
-
     spi = spi_bus;
 
     lcd_cs = _lcd_cs;
@@ -35,6 +37,22 @@ Display::Display(
     ledcAttachPin(led_g, LEDC_G);
     ledcSetup(LEDC_B, LEDC_BASE_FREQ, LEDC_TIMER_BIT);
     ledcAttachPin(led_b, LEDC_B);
+
+    effect_r = LEDEffect([](int value){
+        //Serial.print("R: ");
+        //Serial.println(value);
+        setTimerBrightness(LEDC_R, value);
+    });
+    effect_g = LEDEffect([](int value){
+        //Serial.print("G: ");
+        //Serial.println(value);
+        setTimerBrightness(LEDC_G, value);
+    });
+    effect_b = LEDEffect([](int value){
+        //Serial.print("B: ");
+        //Serial.println(value);
+        setTimerBrightness(LEDC_B, value);
+    });
 
     pinMode(lcd_cs, OUTPUT);
     pinMode(lcd_rst, OUTPUT);
@@ -70,64 +88,49 @@ void Display::setBigText(String value) {
     lcd->println(value);
 }
 
-void Display::setLedColor(uint8_t r, uint8_t g, uint8_t b, bool pulse)
+void Display::setLedColor(uint8_t r, uint8_t g, uint8_t b, uint8_t effect)
 {
-    if(pulse) {
-        last_led_pulse = millis();
-        //led_pulse_position = 0;
-        led_pulse_enabled = pulse;
-
-        led_r_target = r;
-        led_g_target = g;
-        led_b_target = b;
-    } else {
-        _setLedColor(r, g, b);
-    }
+    _setLedColor(r, g, b, effect);
 }
 
-void Display::_setLedColor(uint8_t r, uint8_t g, uint8_t b)
+void Display::_setLedColor(uint8_t r, uint8_t g, uint8_t b, uint8_t effect)
 {
-    ledcWrite(LEDC_R, r ? (8191 / r) : 0 * 255);
-    ledcWrite(LEDC_G, g ? (8191 / g) : 0 * 255);
-    ledcWrite(LEDC_B, b ? (8191 / b) : 0 * 255);
-}
+    if(r != current_r || g != current_g || b != current_b || effect != current_effect) {
+        Serial.print("Setting LED Color: #");
+        Serial.print(r, HEX);
+        Serial.print(g, HEX);
+        Serial.println(b, HEX);
 
-void Display::_ledPulse() {
-    if(led_pulse_enabled) {
-        //Serial.println("millis(): " + String(millis()));
-        //Serial.println("last_led_pulse: " + String(last_led_pulse));
-        //Serial.println("LED_PULSE_PERIOD: " + String(LED_PULSE_PERIOD));
-        //led_pulse_position += (float)(
-        //    (float)(millis() - last_led_pulse) / (float)LED_PULSE_PERIOD * (2 * PI)
-        //);
-        led_pulse_position += 0.001;
-        //Serial.println("Calculated pulse position: " + String(led_pulse_position));
-        if (led_pulse_position > (2 * PI)) {
-            led_pulse_position = 0;
-            //led_pulse_position = fmod(led_pulse_position, (2 * PI));
-            //Serial.println("Current Pulse Position Updated to :" + String(led_pulse_position));
+        effect_r.reset();
+        effect_g.reset();
+        effect_b.reset();
+
+        effect_r.setMax((8191 / 255) * r);
+        effect_g.setMax((8191 / 255) * g);
+        effect_b.setMax((8191 / 255) * b);
+
+        if(effect == EFFECT_ON) {
+            effect_r.on();
+            effect_g.on();
+            effect_b.on();
+        } else if (effect == EFFECT_OFF) {
+            effect_r.off();
+            effect_g.off();
+            effect_b.off();
+        } else if (effect == EFFECT_BREATHE) {
+            effect_r.breath(EFFECT_BREATHE_DURATION);
+            effect_g.breath(EFFECT_BREATHE_DURATION);
+            effect_b.breath(EFFECT_BREATHE_DURATION);
+        } else if (effect == EFFECT_BLINK) {
+            effect_r.blink(EFFECT_BLINK_DURATION);
+            effect_g.blink(EFFECT_BLINK_DURATION);
+            effect_b.blink(EFFECT_BLINK_DURATION);
         }
-        float multiplier = sin(led_pulse_position) * 0.25 + 0.75;
 
-        //Serial.println("Targets:");
-        //Serial.println(
-        //    " R: " + String((int)(led_r_target)) +
-        //    " G: " + String((int)(led_g_target)) +
-        //    " B: " + String((int)(led_b_target))
-        //);
-        //Serial.println("Multiplier: " + String(multiplier));
-        //Serial.println("Values:");
-        //Serial.println(
-        //    " R: " + String((int)(multiplier * led_r_target)) +
-        //    " G: " + String((int)(multiplier * led_g_target)) +
-        //    " B: " + String((int)(multiplier * led_b_target))
-        //);
-        _setLedColor(
-            (int)(multiplier * led_r_target),
-            (int)(multiplier * led_g_target),
-            (int)(multiplier * led_b_target)
-        );
-        last_led_pulse = millis();
+        current_r = r;
+        current_g = g;
+        current_b = b;
+        current_effect = effect;
     }
 }
 
@@ -163,5 +166,7 @@ void Display::setTextColor(uint8_t r, uint8_t g, uint8_t b) {
 
 void Display::loop()
 {
-    _ledPulse();
+    effect_r.update();
+    effect_g.update();
+    effect_b.update();
 }

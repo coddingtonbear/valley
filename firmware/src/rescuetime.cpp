@@ -36,7 +36,7 @@ RescueTime::RescueTime(String api_key_v) {
     api_key = api_key_v;
 };
 
-int RescueTime::getProductivityScore() {
+float RescueTime::getProductivityScore() {
     String url = "https://www.rescuetime.com";
     url.concat("/anapi/data?key=");
     url.concat(api_key);
@@ -44,7 +44,7 @@ int RescueTime::getProductivityScore() {
     url.concat("&restrict_kind=efficiency");
     url.concat("&interval=hour");
 
-    Serial.println("Connecting to " + url);
+    Serial.println("Connecting to rescuetime...");
 
     String response = "";
 
@@ -83,17 +83,33 @@ int RescueTime::getProductivityScore() {
     for(int i = rows.size() -1; i >=0; i--) {
         int transferrableSeconds = _min(
             LOOKBACK_SECONDS - totalSeconds,
-            rows[i][i].as<int>()
+            rows[i][1].as<int>()
         );
-        productivityValue += (
+        if (transferrableSeconds <= 0) {
+            break;
+        }
+        float rowProductivityValue = (
             rows[i][4].as<float>() * transferrableSeconds
         );
+        productivityValue += rowProductivityValue;
+        Serial.print(rows[i][0].as<String>());
+        Serial.print(": ");
+        Serial.print(transferrableSeconds);
+        Serial.print(" * ");
+        Serial.print(rows[i][4].as<float>());
+        Serial.print(" = ");
+        Serial.println(rowProductivityValue);
 
         totalSeconds += transferrableSeconds;
     }
-    int displayedProductivity = (int)(
-        productivityValue / totalSeconds
+    float displayedProductivity = (
+        productivityValue / (float)totalSeconds
     );
+    Serial.print(productivityValue);
+    Serial.print(" / ");
+    Serial.print(totalSeconds);
+    Serial.print(" = ");
+    Serial.println(displayedProductivity);
 
     return displayedProductivity;
 }

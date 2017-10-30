@@ -8,7 +8,8 @@ bool connected = false;
 unsigned long lastSample = 0;
 unsigned long lastRefresh = 0;
 
-int productivityScoreDisplayed = -1;
+float lastProductivityScoreDisplayed = -1;
+float productivityScoreDisplayed = -1;
 int productivityScore = 0;
 
 void setup()
@@ -25,15 +26,19 @@ void setup()
     display.setup();
 
     display.fillScreen(0, 0, 30);
+    display.setLedColor(0, 0, 100, EFFECT_BREATHE);
     WiFi.begin(WIFI_SSID, WIFI_PWD);
-    Serial.println("Connecting to\n '" + String(WIFI_SSID) + "'");
+    Serial.print("Connecting to '" + String(WIFI_SSID) + "'...");
     long started = millis();
     while(WiFi.status() != WL_CONNECTED) {
         display.setText("Connecting to\n'" + String(WIFI_SSID) + "'...");
-        Serial.print('.');
-        delay(500);
+        display.loop();
 
         if (millis() > started + WIFI_FAILURE_RESTART) {
+            display.fillScreen(255, 0, 0);
+            display.setTextColor(255, 255, 255);
+            display.setBigText("W" + String(WiFi.status()));
+            delay(5000);
             ESP.restart();
         }
     }
@@ -54,16 +59,19 @@ void setup()
 void loop()
 {
     if(digitalRead(NOT_USB_ENUMERATED)) {
-        display.setLedColor(100, 0, 0);
+        display.setLedColor(100, 0, 0, EFFECT_BREATHE);
         display.fillScreen(0, 0, 0);
         return;
     }
+    display.setLedColor(10, 10, 0, EFFECT_BREATHE);
 
     if(lastSample == 0 || (millis() - lastSample > SAMPLE_INTERVAL)) {
-        int productivityScoreResult = rescuetime.getProductivityScore();
+        float productivityScoreResult = rescuetime.getProductivityScore();
         if(productivityScoreResult >= 0) {
             productivityScore = productivityScoreResult;
             lastSample = millis();
+            Serial.print("Current Productivity: ");
+            Serial.println(productivityScore);
         } else {
             display.fillScreen(255, 0, 0);
             display.setTextColor(255, 255, 255);
@@ -75,20 +83,20 @@ void loop()
     }
 
     if(productivityScore != productivityScoreDisplayed) {
+        lastProductivityScoreDisplayed = productivityScoreDisplayed;
         productivityScoreDisplayed = productivityScore;
 
+        int roundedProductivityScore = (int)round(productivityScore);
+
         colorContainer textColor = getTextColorForProductivityScore(
-            productivityScore
+            roundedProductivityScore
         );
         colorContainer bgColor = getBackgroundColorForProductivityScore(
-            productivityScore
+            roundedProductivityScore
         );
 
         display.fillScreen(bgColor.r, bgColor.g, bgColor.b);
         display.setTextColor(textColor.r, textColor.g, textColor.b);
-
-        Serial.print("Current Productivity: ");
-        Serial.println(productivityScore);
         Serial.print("BGColor: #");
         Serial.print(bgColor.r, HEX);
         Serial.print(bgColor.g, HEX);
@@ -99,11 +107,24 @@ void loop()
         Serial.println(textColor.b, HEX);
 
         if(productivityScore < 100) {
-            display.setBigText(String(productivityScore));
+            display.setBigText(String(roundedProductivityScore));
         } else {
             display.setBigText("OK");
         }
+
+        if(lastProductivityScoreDisplayed >= 0) {
+            if(lastProductivityScoreDisplayed > productivityScoreDisplayed) {
+                display.setLedColor(10, 20, 0, EFFECT_BREATHE);
+            } else {
+                display.setLedColor(0, 20, 10, EFFECT_BREATHE);
+            }
+        } else {
+            display.setLedColor(10, 10, 10, EFFECT_BREATHE);
+        }
+
     }
+
+    display.loop();
 }
 
 
