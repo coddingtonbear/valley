@@ -77,6 +77,10 @@ float RescueTime::getProductivityScore() {
 
     JsonArray& rows = root["rows"];
 
+    if(rows.size() < 1) {
+        return 0;
+    }
+
     float productivityValue = 0;
     int totalSeconds = 0;
 

@@ -63,7 +63,6 @@ void loop()
         display.fillScreen(0, 0, 0);
         return;
     }
-    display.setLedColor(10, 10, 0, EFFECT_BREATHE);
 
     if(lastSample == 0 || (millis() - lastSample > SAMPLE_INTERVAL)) {
         float productivityScoreResult = rescuetime.getProductivityScore();
