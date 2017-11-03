@@ -58,6 +58,8 @@ void setup()
 
 void loop()
 {
+    display.loop();
+
     if(digitalRead(NOT_USB_ENUMERATED)) {
         display.setLedColor(100, 0, 0, EFFECT_BREATHE);
         display.fillScreen(0, 0, 0);
@@ -122,8 +124,6 @@ void loop()
         }
 
     }
-
-    display.loop();
 }
 
 
