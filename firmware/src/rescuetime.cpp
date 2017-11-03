@@ -57,7 +57,9 @@ float RescueTime::getProductivityScore() {
 
     int statusCode = rtClient.GET();
 
-    if(statusCode < 200 || statusCode >= 300) {
+    if(statusCode <= 0) {
+        return -3;
+    } else if(statusCode < 200 || statusCode >= 300) {
         Serial.println("Rescuetime responded with " + String(statusCode));
         return -1;
     }

@@ -73,12 +73,11 @@ void loop()
             lastSample = millis();
             Serial.print("Current Productivity: ");
             Serial.println(productivityScore);
-        } else {
+        } else if(statusCode != -3) {
             display.fillScreen(255, 0, 0);
             display.setTextColor(255, 255, 255);
             display.setBigText("E" + String(abs(productivityScoreResult)));
             delay(5000);
-
             productivityScoreDisplayed = -1;
         }
     }
