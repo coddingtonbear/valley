@@ -8,7 +8,7 @@ uint8_t current_effect = -1;
 
 
 void setTimerBrightness(uint8_t timer_id, int brightness) {
-    ledcWrite(timer_id, _min(brightness, pow(2, 13) - 1));
+    ledcWrite(timer_id, _min(brightness, pow(2, LEDC_TIMER_BIT) - 1));
 }
 
 
@@ -105,9 +105,9 @@ void Display::_setLedColor(uint8_t r, uint8_t g, uint8_t b, uint8_t effect)
         effect_g.reset();
         effect_b.reset();
 
-        effect_r.setMax((8191 / 255) * r);
-        effect_g.setMax((8191 / 255) * g);
-        effect_b.setMax((8191 / 255) * b);
+        effect_r.setMax((pow(2, LEDC_TIMER_BIT) / 255) * r);
+        effect_g.setMax((pow(2, LEDC_TIMER_BIT) / 255) * g);
+        effect_b.setMax((pow(2, LEDC_TIMER_BIT) / 255) * b);
 
         if(effect == EFFECT_ON) {
             effect_r.on();

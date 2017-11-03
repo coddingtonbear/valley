@@ -6,10 +6,8 @@
 #include <Fonts/Michroma6pt7b.h>
 #include <Fonts/Michroma36pt7b.h>
 
-#define LEDC_TIMER_BIT 13
+#define LEDC_TIMER_BIT 11
 #define LEDC_BASE_FREQ 5000
-
-#define LED_MAX 8191
 
 #define LEDC_R 0
 #define LEDC_G 1
