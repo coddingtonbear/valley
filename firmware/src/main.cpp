@@ -61,19 +61,19 @@ void loop()
     display.loop();
 
     if(digitalRead(NOT_USB_ENUMERATED)) {
-        display.setLedColor(100, 0, 0, EFFECT_BREATHE);
+        display.setLedColor(0, 0, 10, EFFECT_BREATHE);
         display.fillScreen(0, 0, 0);
         return;
     }
 
     if(lastSample == 0 || (millis() - lastSample > SAMPLE_INTERVAL)) {
         float productivityScoreResult = rescuetime.getProductivityScore();
+        Serial.print("Current Productivity: ");
+        Serial.println(productivityScore);
         if(productivityScoreResult >= 0) {
             productivityScore = productivityScoreResult;
             lastSample = millis();
-            Serial.print("Current Productivity: ");
-            Serial.println(productivityScore);
-        } else if(statusCode != -3) {
+        } else if(productivityScoreResult != -3) {
             display.fillScreen(255, 0, 0);
             display.setTextColor(255, 255, 255);
             display.setBigText("E" + String(abs(productivityScoreResult)));
@@ -114,7 +114,7 @@ void loop()
 
         if(lastProductivityScoreDisplayed >= 0) {
             if(lastProductivityScoreDisplayed > productivityScoreDisplayed) {
-                display.setLedColor(1, 2, 0);
+                display.setLedColor(2, 1, 0, EFFECT_BREATHE);
             } else {
                 display.setLedColor(0, 2, 1);
             }
@@ -135,9 +135,9 @@ colorContainer getTextColorForProductivityScore(int score) {
         color.b = 0;
     } else {
         color = display.calculateIntermediate(
-            0, 0, 0,
             200, 0, 0,
-            (float)score/50
+            0, 0, 0,
+            (float)(_max(score - 25, 0)) / 25
         );
     }
 
