@@ -1,6 +1,6 @@
 # Whiterose: A DIY Rescuetime + ESP32 Productivity Monitor IOT Device
 
-[![Whiterose Boot](http://img.youtube.com/vi/vnm-2qR6hr0/0.jpg)](http://www.youtube.com/watch?v=vnm-2qR6hr0 "Whiterose IOT Boot")
+[![Whiterose Boot](https://s3-us-west-2.amazonaws.com/coddingtonbear-public/github/whiterose/voo6A5.gif)](https://www.youtube.com/watch?v=nXMo9l9A4Xc&feature=youtu.be "Whiterose IOT Boot")
 
 Whiterose is a DIY project you can use for building a (relatively) simple device for giving you an up-to-date assessment of how productive (or distracted) you are.
 
