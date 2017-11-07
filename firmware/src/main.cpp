@@ -31,6 +31,16 @@ void setup()
     display.fillScreen(0, 0, 30);
     display.setLedColor(0, 0, 100, EFFECT_BREATHE);
 
+    xTaskCreatePinnedToCore(
+        backgroundLoop,
+        "backgroundLoop",
+        4092,
+        NULL,
+        1,
+        NULL,
+        0
+    );
+
     for (
         uint8_t i = 0;
         i < (sizeof(wifiPasscodes)/sizeof(wifiPasscode));
@@ -64,11 +74,15 @@ void setup()
     digitalWrite(LED_B, 0);
 }
 
+void backgroundLoop(void* pvParameters) {
+    while(true) {
+        display.loop();
+        delay(10);
+    }
+}
 
 void loop()
 {
-    display.loop();
-
     if(digitalRead(NOT_USB_ENUMERATED)) {
         display.setLedColor(0, 0, 10, EFFECT_BREATHE);
         display.fillScreen(0, 0, 0);

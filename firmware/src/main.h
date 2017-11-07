@@ -29,6 +29,7 @@
 #define WIFI_FAILURE_RESTART 30000
 
 void setup();
+void backgroundLoop(void* pvParameters);
 void loop();
 
 colorContainer getTextColorForProductivityScore(int);

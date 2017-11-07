@@ -74,5 +74,7 @@ class Display
         LEDEffect effect_g;
         LEDEffect effect_b;
 
+        SemaphoreHandle_t led_mutex;
+
         SPIClass* spi;
 };

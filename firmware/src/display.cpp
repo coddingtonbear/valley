@@ -19,6 +19,8 @@ Display::Display(
 ) {
     spi = spi_bus;
 
+    led_mutex = xSemaphoreCreateMutex();
+
     lcd_cs = _lcd_cs;
     lcd_dc = _lcd_dc;
     lcd_rst = _lcd_rst;
@@ -95,6 +97,7 @@ void Display::setLedColor(uint8_t r, uint8_t g, uint8_t b, uint8_t effect)
 
 void Display::_setLedColor(uint8_t r, uint8_t g, uint8_t b, uint8_t effect)
 {
+    xSemaphoreTake(led_mutex, portMAX_DELAY);
     if(r != current_r || g != current_g || b != current_b || effect != current_effect) {
         Serial.print("Setting LED Color: #");
         Serial.print(r, HEX);
@@ -132,6 +135,7 @@ void Display::_setLedColor(uint8_t r, uint8_t g, uint8_t b, uint8_t effect)
         current_b = b;
         current_effect = effect;
     }
+    xSemaphoreGive(led_mutex);
 }
 
 colorContainer Display::calculateIntermediate(
@@ -166,7 +170,9 @@ void Display::setTextColor(uint8_t r, uint8_t g, uint8_t b) {
 
 void Display::loop()
 {
+    xSemaphoreTake(led_mutex, portMAX_DELAY);
     effect_r.update();
     effect_g.update();
     effect_b.update();
+    xSemaphoreGive(led_mutex);
 }
