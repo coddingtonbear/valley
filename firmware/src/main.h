@@ -4,6 +4,7 @@
 #include <ArduinoJson.h>
 #include <SPI.h>
 #include <WiFi.h>
+#include <WiFiMulti.h>
 #include <Esp.h>
 
 #include "rescuetime.h"

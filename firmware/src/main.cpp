@@ -12,6 +12,9 @@ float lastProductivityScoreDisplayed = -1;
 float productivityScoreDisplayed = -1;
 int productivityScore = 0;
 
+WiFiMulti wifi;
+
+
 void setup()
 {
     Serial.begin(115200);
@@ -27,17 +30,23 @@ void setup()
 
     display.fillScreen(0, 0, 30);
     display.setLedColor(0, 0, 100, EFFECT_BREATHE);
-    WiFi.begin(WIFI_SSID, WIFI_PWD);
-    Serial.print("Connecting to '" + String(WIFI_SSID) + "'...");
-    long started = millis();
-    while(WiFi.status() != WL_CONNECTED) {
-        display.setText("Connecting to\n'" + String(WIFI_SSID) + "'...");
-        display.loop();
 
+    for (
+        uint8_t i = 0;
+        i < (sizeof(wifiPasscodes)/sizeof(wifiPasscode));
+        i++
+    ) {
+        wifi.addAP(wifiPasscodes[i].ssid, wifiPasscodes[i].pwd);
+    }
+
+    Serial.print("Connecting to wifi...");
+    long started = millis();
+    display.setText("Connecting to wifi...");
+    while(wifi.run() != WL_CONNECTED) {
         if (millis() > started + WIFI_FAILURE_RESTART) {
             display.fillScreen(255, 0, 0);
             display.setTextColor(255, 255, 255);
-            display.setBigText("W" + String(WiFi.status()));
+            display.setBigText("W" + String(wifi.run()));
             delay(5000);
             ESP.restart();
         }
