@@ -22,12 +22,17 @@ void setup()
     hspi = SPIClass(HSPI);
     hspi.begin(14, 12, 13);
 
+    pinMode(SD_CS, OUTPUT);
+
+    digitalWrite(LED_R, 0);
+    digitalWrite(LED_G, 0);
+    digitalWrite(LED_B, 0);
+
     display = Display(
         &hspi, LCD_CS, LCD_DC, LCD_RST,
         LED_R, LED_G, LED_B
     );
     display.setup();
-
     display.fillScreen(0, 0, 30);
     display.setLedColor(0, 0, 100, EFFECT_BREATHE);
 
@@ -61,17 +66,11 @@ void setup()
             ESP.restart();
         }
     }
-    display.fillScreen(0, 0, 60);
+    display.fillScreen(0, 0, 0);
     display.setText("Connected as \n'" + WiFi.localIP().toString() + "'");
     Serial.println();
     Serial.println("Connected as " + WiFi.localIP().toString());
     delay(3000);
-
-    pinMode(SD_CS, OUTPUT);
-
-    digitalWrite(LED_R, 0);
-    digitalWrite(LED_G, 0);
-    digitalWrite(LED_B, 0);
 }
 
 void backgroundLoop(void* pvParameters) {
@@ -137,12 +136,14 @@ void loop()
 
         if(lastProductivityScoreDisplayed >= 0) {
             if(lastProductivityScoreDisplayed > productivityScoreDisplayed) {
-                display.setLedColor(2, 1, 0, EFFECT_BREATHE);
+                display.setLedColor(20, 10, 0, EFFECT_BREATHE);
+            } else if (lastProductivityScoreDisplayed == productivityScoreDisplayed) {
+                display.setLedColor(10, 10, 10, EFFECT_BREATHE);
             } else {
-                display.setLedColor(0, 2, 1);
+                display.setLedColor(0, 20, 10, EFFECT_BREATHE);
             }
         } else {
-            display.setLedColor(1, 1, 1);
+            display.setLedColor(10, 10, 10, EFFECT_BREATHE);
         }
 
     }
